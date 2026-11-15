@@ -1,4 +1,5 @@
 import json
+from datetime import timedelta
 
 import pytest
 
@@ -56,6 +57,16 @@ def test_device_goes_offline_after_silence(data, clock):
     assert body["online"] == 0 and body["offline"] == 4
     _, d = call("GET /devices/{deviceId}", path={"deviceId": "WATER_STATION_01"})
     assert d["connection"] == "OFFLINE"
+
+
+def test_device_with_slow_clock_still_online(db, clock):
+    # Device clock 16s behind the cloud (seen in real testing): must still count as ONLINE.
+    clock.advance(seconds=5)
+    telemetry.handler(message(device="WATER_STATION_01", ts=clock.now - timedelta(seconds=16)))
+    clock.advance(seconds=5)
+    _, d = call("GET /devices/{deviceId}", path={"deviceId": "WATER_STATION_01"})
+    assert d["online"] is True
+    assert d["lastReadingAt"] < d["lastSeen"]
 
 
 def test_devices(data):

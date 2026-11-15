@@ -165,7 +165,8 @@ def device_view(item, now):
         "connection": "ONLINE" if online else ("OFFLINE" if last_seen else "NEVER_SEEN"),
         "online": online,
         "waterStatus": item.get("latestStatus") if last_seen else None,
-        "lastSeen": last_seen,
+        "lastSeen": last_seen,  # when the cloud last received a message
+        "lastReadingAt": item.get("lastReadingAt"),  # device timestamp of that reading
         "latestReadings": item.get("latestReadings"),
         "latestViolations": item.get("latestViolations", []),
         "messageCount": item.get("messageCount", 0),

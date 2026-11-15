@@ -106,8 +106,8 @@ def process(msg):
         return {"result": "duplicate"}
     update_aggregates(msg, status, violations)
 
-    last_seen = device.get("lastSeen")
-    if last_seen and last_seen >= msg["timestamp"]:
+    last_reading_at = device.get("lastReadingAt")
+    if last_reading_at and last_reading_at >= msg["timestamp"]:
         # An older message arrived late: keep it in history but don't touch latest state/alerts.
         return {"result": "stored_out_of_order", "status": status}
 
@@ -231,16 +231,19 @@ def update_device(msg, status, violations, alert_state):
     latest_violations = [
         {k: v[k] for k in ("parameter", "severity", "value", "limit", "direction", "message")} for v in violations
     ]
+    # lastSeen      = when the CLOUD received it (used for online/offline; device clocks can be wrong)
+    # lastReadingAt = the device's own timestamp (used to ignore late, out-of-order messages)
     try:
         shared.table(shared.REGISTRY_TABLE).update_item(
             Key={"deviceId": msg["deviceId"]},
             UpdateExpression=(
-                "SET lastSeen = :ts, latestReadings = :r, latestStatus = :s, "
+                "SET lastSeen = :now, lastReadingAt = :ts, latestReadings = :r, latestStatus = :s, "
                 "latestViolations = :v, alertState = :a ADD messageCount :one"
             ),
             # never let an older message overwrite newer state
-            ConditionExpression="attribute_not_exists(lastSeen) OR lastSeen < :ts",
+            ConditionExpression="attribute_not_exists(lastReadingAt) OR lastReadingAt < :ts",
             ExpressionAttributeValues=shared.to_dynamo({
+                ":now": shared.iso(shared.utcnow()),
                 ":ts": msg["timestamp"], ":r": msg["readings"], ":s": status,
                 ":v": latest_violations, ":a": alert_state, ":one": 1,
             }),
