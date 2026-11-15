@@ -146,6 +146,10 @@ def call(url, method="GET", body=None, token="secret-123"):
 
 def test_control_requires_token(control):
     assert call(control + "/status", token="wrong")[0] == 401
+    # POST with a body and a wrong token must get a clean 401, not a dropped connection
+    code, body, _ = call(control + "/command", "POST", {"command": "critical 1"}, token="wrong")
+    assert code == 401 and body == {"error": "unauthorized"}
+    assert sim.STATIONS[0].mode["ph"] == "normal"
 
 
 def test_control_runs_commands(control):

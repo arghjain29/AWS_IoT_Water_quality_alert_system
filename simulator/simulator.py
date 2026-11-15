@@ -314,7 +314,7 @@ def run_command(text):
         if cmd == "disconnect":
             for s in stations:
                 s.online = False
-            return f"{names}: disconnected (the dashboard shows OFFLINE after ~15s)"
+            return f"{names}: disconnected (the dashboard shows OFFLINE after ~20s)"
 
         # restore
         for s in stations:
@@ -414,13 +414,17 @@ class DashboardControl(BaseHTTPRequestHandler):
         self._reply(200, status_json())
 
     def do_POST(self):
+        # Read the body first: replying without reading it makes some clients see a dropped connection.
+        length = int(self.headers.get("Content-Length") or 0)
+        if length > 2048:
+            return self._reply(413, {"error": "request too large"})
+        raw = self.rfile.read(length)
         if not self._authorized():
             return self._reply(401, {"error": "unauthorized"})
         if self.path != "/command":
             return self._reply(404, {"error": "not found"})
         try:
-            length = min(int(self.headers.get("Content-Length") or 0), 2048)
-            command = json.loads(self.rfile.read(length) or b"{}").get("command", "")
+            command = json.loads(raw or b"{}").get("command", "")
             message = run_command(command)
             if command.strip():
                 log(f"[dashboard] {command}  ->  {message.splitlines()[0] if message else ''}")
