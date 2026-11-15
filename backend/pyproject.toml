@@ -1,0 +1,22 @@
+[project]
+name = "water-quality-backend"
+version = "0.1.0"
+description = "AWS Lambda functions: telemetry processor and REST API"
+requires-python = ">=3.12"
+# boto3 is already included in the AWS Lambda Python runtime, so the deployed
+# zip contains only our own code. Locally we install it for the tests.
+dependencies = []
+
+[dependency-groups]
+dev = [
+    "boto3>=1.35",
+    "moto[dynamodb]>=5.0",  # fake DynamoDB for tests (no AWS calls)
+    "pytest>=8.0",
+]
+
+[tool.uv]
+package = false
+
+[tool.pytest.ini_options]
+pythonpath = ["lambda"]
+testpaths = ["tests"]
