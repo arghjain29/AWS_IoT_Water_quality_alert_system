@@ -1,0 +1,7 @@
+# Copy to terraform.tfvars (git-ignored) and adjust.
+
+# Email for the free monthly AWS Budgets alert ($5 by default). Leave empty to skip.
+budget_alert_email = ""
+
+# Add your Vercel URL here after deploying the frontend:
+# cors_allowed_origins = ["http://localhost:5173", "http://127.0.0.1:5173", "https://your-app.vercel.app"]
