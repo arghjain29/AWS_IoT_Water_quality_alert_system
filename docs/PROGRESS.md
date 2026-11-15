@@ -3,8 +3,8 @@
 | Phase | Milestone | Status |
 |---|---|---|
 | 1 | Environment inspection & plan | ✅ Done |
-| 2 | Repository structure & Python simulator | 🔄 In progress |
-| 3 | AWS IoT Core MQTT integration (certificates, real connection) | ⬜ |
+| 2 | Repository structure & Python simulator (single file) | ✅ Done (23 tests, dry-run verified) |
+| 3 | AWS IoT Core MQTT integration (certificates, real connection) | 🔄 Next |
 | 4 | Terraform infrastructure (plan → approval → apply) | ⬜ |
 | 5 | Lambda telemetry processing & DynamoDB | ⬜ |
 | 6 | API Gateway & REST API | ⬜ |
