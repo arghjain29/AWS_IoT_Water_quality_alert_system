@@ -152,6 +152,19 @@ def test_control_requires_token(control):
     assert sim.STATIONS[0].mode["ph"] == "normal"
 
 
+@pytest.mark.parametrize("length,code", [("-1", 413), ("abc", 400), ("999999", 413)])
+def test_control_rejects_bad_content_length(control, length, code):
+    import http.client
+    host, port = control.removeprefix("http://").split(":")
+    conn = http.client.HTTPConnection(host, int(port), timeout=5)
+    conn.putrequest("POST", "/command")
+    conn.putheader("Content-Length", length)
+    conn.putheader("Authorization", "Bearer secret-123")
+    conn.endheaders()
+    assert conn.getresponse().status == code
+    conn.close()
+
+
 def test_control_runs_commands(control):
     code, body, headers = call(control + "/command", "POST", {"command": "critical 2 tds"})
     assert code == 200 and body["ok"]

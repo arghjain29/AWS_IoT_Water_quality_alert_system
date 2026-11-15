@@ -378,6 +378,8 @@ def status_text():
 #    127.0.0.1 only (not reachable from the network) + secret token.
 # =============================================================================
 class DashboardControl(BaseHTTPRequestHandler):
+    timeout = 5  # seconds; a slow or stuck client can't hold a thread forever
+
     def log_message(self, *args):  # keep the terminal clean
         pass
 
@@ -414,9 +416,13 @@ class DashboardControl(BaseHTTPRequestHandler):
         self._reply(200, status_json())
 
     def do_POST(self):
-        # Read the body first: replying without reading it makes some clients see a dropped connection.
-        length = int(self.headers.get("Content-Length") or 0)
-        if length > 2048:
+        # Read the (small, bounded) body first: replying without reading it makes
+        # some clients see a dropped connection instead of the 401.
+        try:
+            length = int(self.headers.get("Content-Length") or 0)
+        except ValueError:
+            return self._reply(400, {"error": "bad Content-Length"})
+        if not 0 <= length <= 2048:
             return self._reply(413, {"error": "request too large"})
         raw = self.rfile.read(length)
         if not self._authorized():
