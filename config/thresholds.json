@@ -1,0 +1,38 @@
+{
+  "version": 1,
+  "description": "Configurable DEMONSTRATION thresholds. Not a regulatory drinking-water standard. Values outside 'normal' => WARNING; outside 'critical' => CRITICAL.",
+  "parameters": {
+    "ph": {
+      "label": "pH",
+      "unit": "",
+      "decimals": 2,
+      "validRange": { "min": 0, "max": 14 },
+      "normal": { "min": 6.5, "max": 8.5 },
+      "critical": { "min": 6.0, "max": 9.0 }
+    },
+    "turbidity": {
+      "label": "Turbidity",
+      "unit": "NTU",
+      "decimals": 2,
+      "validRange": { "min": 0, "max": 4000 },
+      "normal": { "min": 0, "max": 5 },
+      "critical": { "min": null, "max": 10 }
+    },
+    "tds": {
+      "label": "Total Dissolved Solids",
+      "unit": "mg/L",
+      "decimals": 0,
+      "validRange": { "min": 0, "max": 10000 },
+      "normal": { "min": 0, "max": 500 },
+      "critical": { "min": null, "max": 1000 }
+    },
+    "temperature": {
+      "label": "Water Temperature",
+      "unit": "°C",
+      "decimals": 1,
+      "validRange": { "min": -5, "max": 80 },
+      "normal": { "min": 10, "max": 35 },
+      "critical": { "min": 5, "max": 40 }
+    }
+  }
+}

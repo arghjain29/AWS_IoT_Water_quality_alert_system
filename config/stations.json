@@ -1,0 +1,50 @@
+{
+  "version": 1,
+  "topicTemplate": "water-quality/stations/{device_id}/telemetry",
+  "stations": [
+    {
+      "deviceId": "WATER_STATION_01",
+      "name": "College Water Tank",
+      "location": "College Water Tank",
+      "profile": {
+        "ph": { "baseline": 7.2, "noise": 0.04, "diurnal": 0.05 },
+        "turbidity": { "baseline": 1.6, "noise": 0.12, "diurnal": 0.2 },
+        "tds": { "baseline": 290, "noise": 4, "diurnal": 6 },
+        "temperature": { "baseline": 25.5, "noise": 0.15, "diurnal": 1.5 }
+      }
+    },
+    {
+      "deviceId": "WATER_STATION_02",
+      "name": "Residential Water Supply",
+      "location": "Residential Water Supply",
+      "profile": {
+        "ph": { "baseline": 7.4, "noise": 0.03, "diurnal": 0.04 },
+        "turbidity": { "baseline": 0.9, "noise": 0.08, "diurnal": 0.1 },
+        "tds": { "baseline": 220, "noise": 3, "diurnal": 4 },
+        "temperature": { "baseline": 24.5, "noise": 0.12, "diurnal": 1.2 }
+      }
+    },
+    {
+      "deviceId": "WATER_STATION_03",
+      "name": "Industrial Water Storage",
+      "location": "Industrial Water Storage",
+      "profile": {
+        "ph": { "baseline": 7.8, "noise": 0.05, "diurnal": 0.06 },
+        "turbidity": { "baseline": 3.0, "noise": 0.18, "diurnal": 0.3 },
+        "tds": { "baseline": 430, "noise": 6, "diurnal": 10 },
+        "temperature": { "baseline": 28.5, "noise": 0.2, "diurnal": 1.8 }
+      }
+    },
+    {
+      "deviceId": "WATER_STATION_04",
+      "name": "Community Water Supply",
+      "location": "Community Water Supply",
+      "profile": {
+        "ph": { "baseline": 7.0, "noise": 0.04, "diurnal": 0.05 },
+        "turbidity": { "baseline": 2.0, "noise": 0.14, "diurnal": 0.25 },
+        "tds": { "baseline": 350, "noise": 5, "diurnal": 8 },
+        "temperature": { "baseline": 26.5, "noise": 0.15, "diurnal": 1.6 }
+      }
+    }
+  ]
+}

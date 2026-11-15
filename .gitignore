@@ -1,0 +1,50 @@
+# ---- Secrets & device credentials (NEVER commit) ----
+certs/
+*.pem
+*.key
+*.crt
+*.pfx
+.env
+.env.*
+!.env.example
+
+# ---- Terraform ----
+.terraform/
+*.tfstate
+*.tfstate.*
+*.tfplan
+tfplan
+crash.log
+override.tf
+override.tf.json
+*_override.tf
+*.auto.tfvars
+terraform.tfvars
+
+# ---- Build artifacts ----
+infra/terraform/build/
+dist/
+build/
+*.zip
+
+# ---- Python ----
+__pycache__/
+*.py[cod]
+.venv/
+.pytest_cache/
+.ruff_cache/
+.coverage
+htmlcov/
+*.egg-info/
+
+# ---- Node / frontend ----
+node_modules/
+.vercel/
+*.local
+
+# ---- OS / editor ----
+.DS_Store
+Thumbs.db
+.idea/
+.vscode/
+*.log
