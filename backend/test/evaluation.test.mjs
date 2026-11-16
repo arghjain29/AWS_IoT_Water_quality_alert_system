@@ -50,7 +50,7 @@ test("mixed readings take the worst status and list every violation", () => {
 
 test("message explains which parameter triggered it", () => {
   const { violations: [v] } = evaluate(reading({ ph: 5.5 }));
-  assert.equal(v.message, "pH 5.5 is below the critical limit of 6");
+  assert.equal(v.message, "pH 5.50 is below the critical limit of 6.00");
   const { violations: [t] } = evaluate(reading({ tds: 1200 }));
   assert.equal(t.message, "Total Dissolved Solids 1200 mg/L is above the critical limit of 1000 mg/L");
 });

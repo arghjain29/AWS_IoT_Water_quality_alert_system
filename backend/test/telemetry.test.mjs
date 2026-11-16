@@ -116,7 +116,7 @@ test("abnormal reading creates an alert with details", async () => {
   assert.match(a.alertId, /^[0-9a-f]{32}$/);
   assert.deepEqual([a.deviceId, a.parameter, a.severity, a.status], ["WATER_STATION_01", "ph", "CRITICAL", "ACTIVE"]);
   assert.equal(a.value, 5.5);
-  assert.equal(a.message, "pH 5.5 is below the critical limit of 6");
+  assert.equal(a.message, "pH 5.50 is below the critical limit of 6.00");
   assert.equal(a.deviceName, "College Water Tank");
   assert.equal((await device()).latestViolations[0].parameter, "ph");
 });

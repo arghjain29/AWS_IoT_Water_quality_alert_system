@@ -33,6 +33,7 @@ export function evaluate(readings, thresholds = THRESHOLDS) {
 
     const unit = t.unit ? ` ${t.unit}` : "";
     const kind = severity === "CRITICAL" ? "critical" : "normal";
+    const show = (n) => n.toFixed(t.decimals); // e.g. pH 9.30, limit 9.00 (configured decimals)
     violations.push({
       parameter: param,
       label: t.label,
@@ -41,7 +42,7 @@ export function evaluate(readings, thresholds = THRESHOLDS) {
       severity,
       limit,
       direction,
-      message: `${t.label} ${value}${unit} is ${direction} the ${kind} limit of ${limit}${unit}`,
+      message: `${t.label} ${show(value)}${unit} is ${direction} the ${kind} limit of ${show(limit)}${unit}`,
     });
   }
 
