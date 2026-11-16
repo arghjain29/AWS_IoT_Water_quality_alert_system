@@ -19,7 +19,8 @@ import { cn } from "@/lib/utils";
 
 const TOKEN_KEY = "wq-sim-control-token";
 const readToken = () => {
-  try { return localStorage.getItem(TOKEN_KEY) || import.meta.env.VITE_SIM_CONTROL_TOKEN || ""; } catch { return ""; }
+  // The token is pasted on this page and kept only in this browser; it is never built into the site.
+  try { return localStorage.getItem(TOKEN_KEY) || ""; } catch { return ""; }
 };
 
 async function control(path, token, body) {

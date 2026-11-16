@@ -44,14 +44,21 @@ if (-not (Test-Path $simEnv)) { Copy-Item (Join-Path $root "simulator\.env.examp
 Set-EnvValue $simEnv "IOT_ENDPOINT" $endpoint
 $token = ((Get-Content $simEnv | Where-Object { $_ -like "CONTROL_TOKEN=*" }) -split "=", 2)[1]
 if (-not $token -or $token -like "change-me*") {
-    $token = -join ((1..40) | ForEach-Object { "{0:x}" -f (Get-Random -Maximum 16) })
+    # cryptographically secure random token (32 bytes -> 64 hex chars)
+    $bytes = New-Object byte[] 32
+    $rng = [System.Security.Cryptography.RandomNumberGenerator]::Create() # works on Windows PowerShell 5.1 and 7
+    $rng.GetBytes($bytes)
+    $rng.Dispose()
+    $token = -join ($bytes | ForEach-Object { $_.ToString("x2") })
+    if ($token -match "^0+$") { throw "token generation failed" }
     Set-EnvValue $simEnv "CONTROL_TOKEN" $token
 }
 
+# Only the public API URL goes into the frontend. The control token is NOT written
+# there: VITE_* values are built into the website's JavaScript.
 $feEnv = Join-Path $root "frontend\.env.local"
 Set-EnvValue $feEnv "VITE_API_BASE_URL" $apiUrl
 Set-EnvValue $feEnv "VITE_SIM_CONTROL_URL" "http://127.0.0.1:8765"
-Set-EnvValue $feEnv "VITE_SIM_CONTROL_TOKEN" $token
 
 Write-Host "`nReady." -ForegroundColor Green
 Write-Host "  API:          $apiUrl"
@@ -59,4 +66,5 @@ Write-Host "  IoT endpoint: $endpoint"
 Write-Host "`nNext, in two terminals:"
 Write-Host "  cd simulator; uv run simulator.py"
 Write-Host "  cd frontend;  npm run dev      -> http://localhost:5173"
+Write-Host "`nFor the Simulation page buttons, paste CONTROL_TOKEN from simulator\.env into that page once."
 Write-Host "`nIf the dashboard is deployed on Vercel, update its VITE_API_BASE_URL to the API above and redeploy."
