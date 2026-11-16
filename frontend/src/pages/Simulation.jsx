@@ -57,7 +57,7 @@ function Instructions() {
           <li>Copy <Command>CONTROL_TOKEN</Command> from <Command>simulator/.env</Command> into the token box on this page.</li>
           <li>Use the buttons, or type commands into the simulator terminal:</li>
         </ol>
-        <div className="grid gap-1 rounded-md border bg-muted/40 p-3 font-mono text-xs">
+        <div className="grid gap-1 overflow-x-auto whitespace-pre rounded-md border bg-muted/40 p-3 font-mono text-xs">
           <span>critical 3 ph low      <span className="text-muted-foreground"># station 3 pH falls below 6.0</span></span>
           <span>warning 2 turbidity    <span className="text-muted-foreground"># station 2 turbidity ~7.5 NTU</span></span>
           <span>set 1 tds 1180         <span className="text-muted-foreground"># exact value</span></span>

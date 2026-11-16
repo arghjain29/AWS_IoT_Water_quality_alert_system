@@ -27,7 +27,7 @@ export function SensorValue({ param, value, thresholds, size = "md", muted = fal
       level === "WARNING" && "border-status-warning/50 bg-status-warning/10",
       muted && "opacity-60",
     )}>
-      <div className="flex items-center justify-between gap-2 text-xs text-muted-foreground">
+      <div className="flex flex-wrap items-center justify-between gap-x-2 text-xs text-muted-foreground">
         <span>{paramLabel(param)}</span>
         {Icon && (
           <span className={cn("inline-flex items-center gap-0.5 font-medium",
