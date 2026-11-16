@@ -1,24 +1,16 @@
-# Both functions share one small zip: our Python files + thresholds.json.
-# boto3 is already provided by the Lambda runtime, so there are no dependencies to bundle.
+# Both functions share one small zip: our JavaScript files + thresholds.json.
+# The AWS SDK v3 is already provided by the Lambda Node.js runtime, so there
+# are no node_modules to bundle.
 data "archive_file" "lambda" {
   type        = "zip"
   output_path = "${path.module}/build/lambda.zip"
 
-  source {
-    content  = file("${local.repo_root}/backend/lambda/shared.py")
-    filename = "shared.py"
-  }
-  source {
-    content  = file("${local.repo_root}/backend/lambda/evaluation.py")
-    filename = "evaluation.py"
-  }
-  source {
-    content  = file("${local.repo_root}/backend/lambda/telemetry.py")
-    filename = "telemetry.py"
-  }
-  source {
-    content  = file("${local.repo_root}/backend/lambda/api.py")
-    filename = "api.py"
+  dynamic "source" {
+    for_each = ["shared.mjs", "evaluation.mjs", "telemetry.mjs", "api.mjs"]
+    content {
+      content  = file("${local.repo_root}/backend/src/${source.value}")
+      filename = source.value
+    }
   }
   source {
     content  = file("${local.repo_root}/config/thresholds.json")
@@ -27,12 +19,13 @@ data "archive_file" "lambda" {
 }
 
 locals {
+  lambda_runtime = "nodejs22.x"
+
   table_env = {
     READINGS_TABLE   = aws_dynamodb_table.readings.name
     ALERTS_TABLE     = aws_dynamodb_table.alerts.name
     REGISTRY_TABLE   = aws_dynamodb_table.registry.name
     AGGREGATES_TABLE = aws_dynamodb_table.aggregates.name
-    LOG_LEVEL        = "INFO"
   }
 }
 
@@ -40,7 +33,7 @@ resource "aws_lambda_function" "telemetry" {
   function_name    = "${local.name}-telemetry-processor"
   description      = "Validates and evaluates IoT telemetry, stores readings, creates alerts"
   role             = aws_iam_role.telemetry_lambda.arn
-  runtime          = "python3.12"
+  runtime          = local.lambda_runtime
   architectures    = ["arm64"] # cheaper than x86 for the same work
   handler          = "telemetry.handler"
   filename         = data.archive_file.lambda.output_path
@@ -62,7 +55,7 @@ resource "aws_lambda_function" "api" {
   function_name    = "${local.name}-api"
   description      = "REST API for the water-quality dashboard"
   role             = aws_iam_role.api_lambda.arn
-  runtime          = "python3.12"
+  runtime          = local.lambda_runtime
   architectures    = ["arm64"]
   handler          = "api.handler"
   filename         = data.archive_file.lambda.output_path
