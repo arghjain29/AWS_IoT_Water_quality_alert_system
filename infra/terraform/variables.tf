@@ -17,7 +17,7 @@ variable "environment" {
 }
 
 variable "cors_allowed_origins" {
-  description = "Frontend origins allowed to call the API (add the Vercel URL after deploying)"
+  description = "Frontend origins allowed to call the API (the local Vite dev server)"
   type        = list(string)
   default     = ["http://localhost:5173", "http://127.0.0.1:5173"]
 }
