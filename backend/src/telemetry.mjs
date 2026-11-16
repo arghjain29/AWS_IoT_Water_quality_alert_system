@@ -112,7 +112,10 @@ async function processMessage(msg) {
   const created = await handleAlerts(device, msg, violations, alertState);
   await updateDevice(msg, status, violations, alertState);
 
-  log("INFO", "processed", { deviceId: msg.deviceId, timestamp: msg.timestamp, status, alertsCreated: created.length });
+  // The readings are included so the CloudWatch dashboard can chart them from the logs.
+  log("INFO", "processed", {
+    deviceId: msg.deviceId, timestamp: msg.timestamp, status, alertsCreated: created.length, ...msg.readings,
+  });
   return { result: "stored", status, alertsCreated: created };
 }
 
@@ -222,7 +225,9 @@ async function createAlert(device, msg, v) {
       simulated: msg.simulated,
     },
   }));
-  log("WARN", "ALERT", { severity: v.severity, deviceId: msg.deviceId, parameter: v.parameter, message: v.message });
+  log("WARN", "ALERT", {
+    alertId, severity: v.severity, deviceId: msg.deviceId, parameter: v.parameter, value: v.value, description: v.message,
+  });
   return alertId;
 }
 

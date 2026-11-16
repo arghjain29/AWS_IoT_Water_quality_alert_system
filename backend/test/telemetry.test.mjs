@@ -153,6 +153,24 @@ test("each parameter and device gets its own alert", async () => {
   assert.deepEqual(found, ["WATER_STATION_01/ph", "WATER_STATION_01/tds", "WATER_STATION_02/ph"]);
 });
 
+test("log lines keep their label and carry what the CloudWatch dashboard needs", async (t) => {
+  const logged = t.mock.method(console, "log", () => {});
+  await send(5, "WATER_STATION_01", { ph: 5.5 });
+  const lines = logged.mock.calls.map((c) => JSON.parse(c.arguments[0]));
+
+  const alert = lines.find((l) => l.message === "ALERT");
+  assert.ok(alert, "ALERT label must not be overwritten by the alert text");
+  assert.equal(alert.level, "WARN");
+  assert.equal(alert.description, "pH 5.50 is below the critical limit of 6.00");
+  assert.deepEqual([alert.deviceId, alert.parameter, alert.severity, alert.value], ["WATER_STATION_01", "ph", "CRITICAL", 5.5]);
+
+  const processed = lines.find((l) => l.message === "processed");
+  assert.deepEqual(
+    [processed.deviceId, processed.status, processed.ph, processed.turbidity, processed.tds, processed.temperature],
+    ["WATER_STATION_01", "CRITICAL", 5.5, 1.8, 320, 26.5],
+  );
+});
+
 test("alert indexes are queryable", async () => {
   await send(5, "WATER_STATION_01", { ph: 5.5 });
   const count = async (IndexName, attr, value) => (await db().send(new QueryCommand({

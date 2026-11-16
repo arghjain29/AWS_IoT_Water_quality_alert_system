@@ -53,6 +53,7 @@ export function parseIso(text) {
 export const addSeconds = (date, seconds) => new Date(date.getTime() + seconds * 1000);
 
 export function log(level, message, extra = {}) {
-  // One JSON object per line: easy to search in CloudWatch Logs.
-  console.log(JSON.stringify({ level, message, ...extra }));
+  // One JSON object per line: easy to search in CloudWatch Logs (and used by the
+  // CloudWatch dashboard). level/message go last so extra fields can't overwrite them.
+  console.log(JSON.stringify({ ...extra, level, message }));
 }
