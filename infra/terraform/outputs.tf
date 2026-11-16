@@ -36,6 +36,11 @@ output "dynamodb_tables" {
   }
 }
 
+output "dashboard_url" {
+  description = "CloudWatch dashboard for this project"
+  value       = "https://${local.region}.console.aws.amazon.com/cloudwatch/home?region=${local.region}#dashboards/dashboard/${aws_cloudwatch_dashboard.main.dashboard_name}"
+}
+
 output "lambda_functions" {
   value = {
     telemetry = aws_lambda_function.telemetry.function_name
