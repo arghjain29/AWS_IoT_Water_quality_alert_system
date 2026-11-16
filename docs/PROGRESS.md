@@ -6,7 +6,7 @@
 | 2 | Repository structure & Python simulator (single file) | ✅ Done (23 tests, dry-run verified) |
 | 3 | AWS IoT Core MQTT integration (certificates, real connection) | ✅ 4 devices connected over mTLS, PUBACK confirmed |
 | 4 | Terraform infrastructure (plan → approval → apply) | ✅ 42 resources applied in ap-south-1 |
-| 5 | Lambda telemetry processing & DynamoDB | ✅ readings, aggregates, alerts (dedup + escalation) verified live |
+| 5 | Lambda telemetry processing & DynamoDB (Node.js 22) | ✅ readings, aggregates, alerts (dedup + escalation) verified live |
 | 6 | API Gateway & REST API | ✅ all routes verified live (ack 200/409, pagination, trends, CORS) |
 | 7 | React dashboard | ⬜ |
 | 8 | Full end-to-end integration & testing | ⬜ |
@@ -24,4 +24,4 @@
 - Extra table `WaterReadingAggregates` for efficient trends
 - Acknowledge endpoint protected by throttling + CORS (demo scope, no login)
 - AWS Budgets alert at $5/month; Vercel deploy in Phase 9
-- Python tooling: `uv`
+- Simulator in Python (`uv`); Lambdas in Node.js (ported from Python after live verification)
