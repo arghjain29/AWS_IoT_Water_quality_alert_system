@@ -8,7 +8,7 @@
 | 4 | Terraform infrastructure (plan → approval → apply) | ✅ 42 resources applied in ap-south-1 |
 | 5 | Lambda telemetry processing & DynamoDB (Node.js 22) | ✅ readings, aggregates, alerts (dedup + escalation) verified live |
 | 6 | API Gateway & REST API | ✅ all routes verified live (ack 200/409, pagination, trends, CORS) |
-| 7 | React dashboard | ⬜ |
+| 7 | React dashboard | ✅ 6 pages verified against live AWS data (desktop + mobile), mock mode verified |
 | 8 | Full end-to-end integration & testing | ⬜ |
 | 9 | Vercel deployment & documentation | ⬜ |
 
